@@ -20,7 +20,7 @@ These values are also recorded in the root `vercel.json`. Do not create separate
 Add these as server-only variables in the Vercel project for the environments you deploy:
 
 - `DATABASE_URL` — PostgreSQL runtime URL. Use a pooled URL if your database provider recommends one for serverless functions.
-- `DIRECT_URL` — direct PostgreSQL URL used by Prisma migrations.
+- `DATABASE_URL_UNPOOLED` — direct PostgreSQL URL used by Prisma migrations. Neon supplies this alongside `DATABASE_URL` in the Vercel integration.
 - `AUDIT_HMAC_KEY` — a base64-encoded random 32-byte key, used only for audit event HMACs.
 - `VAULT_KEK_BASE64` — a different base64-encoded random 32-byte key, used to wrap secret data keys.
 
