@@ -998,3 +998,23 @@ body{min-width:320px;background:var(--bg);color:var(--text);font-family:var(--fo
 .ops-settings-list{display:grid;margin:18px 0 0;border:1px solid rgba(174,198,207,.1);border-radius:10px;overflow:hidden}.ops-settings-list>div{display:grid;grid-template-columns:minmax(130px,.6fr) minmax(0,1.4fr);gap:12px;padding:13px 15px;border-bottom:1px solid rgba(174,198,207,.08)}.ops-settings-list>div:last-child{border-bottom:0}.ops-settings-list dt{color:#7f8e90;font-size:10px}.ops-settings-list dd{margin:0;color:#d1dcd9;font-size:10px;overflow-wrap:anywhere}
 @media(max-width:640px){.ops-check-grid,.ops-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.ops-incident-controls{grid-template-columns:1fr}.ops-incident-controls .ops-quiet-button{justify-self:start}.ops-settings-list>div{grid-template-columns:1fr;gap:5px}.ops-report-summary{align-items:flex-start;flex-direction:column}.ops-heading-copy p{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.ops-spin{animation:none}}
+
+/* Opening brand film, followed by the regular landing page. */
+.site-intro{position:fixed;inset:0;z-index:1000;overflow:hidden;isolation:isolate;background:#05080b;opacity:1;visibility:visible;transition:opacity .42s ease,visibility .42s ease}
+.site-intro-leaving{opacity:0;visibility:hidden;pointer-events:none}
+.site-intro-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#05080b}
+.site-intro-vignette{position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(180deg,#05080b40 0%,#05080b20 34%,#05080b70 100%),radial-gradient(ellipse at center,transparent 32%,#03060980 100%)}
+.site-intro-brand{position:absolute;top:clamp(22px,4vh,42px);left:clamp(20px,4vw,48px);z-index:1;display:flex;align-items:center;gap:10px;color:#f3f6fa;font-size:11px;font-weight:650;letter-spacing:.16em;text-shadow:0 2px 18px #000b}
+.site-intro-mark{width:24px;height:27px;display:grid;place-items:center;clip-path:polygon(50% 0,94% 17%,90% 68%,50% 100%,10% 68%,6% 17%);background:linear-gradient(145deg,#8bd7b0,#4da8a3);box-shadow:0 0 20px #79cba544}
+.site-intro-mark span{width:7px;height:7px;border:1px solid #071011;border-radius:50%}
+.site-intro-brand i{width:1px;height:13px;background:#dce8df66;margin:0 2px}
+.site-intro-label{color:#d4e1d6b8;font-size:8px;font-weight:500;letter-spacing:.18em}
+.site-intro-skip{position:absolute;left:50%;bottom:clamp(24px,5vh,52px);z-index:2;display:flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 21px;transform:translateX(-50%);border:1px solid #d7e8db55;border-radius:999px;background:#07100cc9;color:#f4f7f4;font:inherit;font-size:12px;font-weight:550;letter-spacing:.02em;backdrop-filter:blur(14px);box-shadow:0 12px 34px #0005;cursor:pointer;transition:background .2s ease,border-color .2s ease,box-shadow .2s ease}
+.site-intro-skip:hover{background:#123328e8;border-color:#8ad9ad99;box-shadow:0 0 30px #68c99a28}
+.site-intro-skip:focus-visible{outline:2px solid #87d4a8;outline-offset:4px}
+.hero{isolation:isolate}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(180deg,#080c12d4 0%,#080c12e6 52%,#080c12 100%),url('/bg.jpg');background-size:cover,cover;background-position:center,center 43%;background-repeat:no-repeat;filter:saturate(.68) brightness(.82)}
+.hero-light{z-index:0}
+.hero-inner{z-index:1}
+@media(max-width:620px){.site-intro-brand{gap:8px}.site-intro-label{font-size:7px}.site-intro-skip{bottom:28px}}
+@media(prefers-reduced-motion:reduce){.site-intro,.site-intro-skip{transition:none}}

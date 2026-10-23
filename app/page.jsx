@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import LandingMotion from '../components/landing-motion';
 import LandingChat from '../components/landing-chat';
+import IntroGate from '../components/intro-gate';
 import {
   ArrowDownRight, ArrowRight, ArrowUpRight, BadgeCheck, Boxes, Braces,
   Check, ChevronRight, CircleDot, Clock3, Fingerprint, GitBranch,
@@ -36,6 +37,7 @@ function ProductWindow() {
 
 export default function LandingPage() {
   return <main id="top">
+    <IntroGate />
     <LandingMotion />
     <LandingChat />
     <header className="site-header"><div className="nav-inner"><Brand /><nav className="desktop-nav" aria-label="Main navigation"><a href="#platform">Platform</a><a href="#security">Security</a><a href="#workflows">Workflows</a><a href="#company">Company</a></nav><div className="nav-actions"><Link className="login-link" href="/app">Log in</Link><Link className="button button-nav" href="/app">Get started <ArrowRight size={14} /></Link></div><details className="mobile-menu"><summary aria-label="Open navigation"><Menu size={20} /></summary><nav aria-label="Mobile navigation"><a href="#platform">Platform</a><a href="#security">Security</a><a href="#workflows">Workflows</a><a href="#company">Company</a><Link href="/app">Log in / Get started <ArrowRight size={14} /></Link></nav></details></div></header>
