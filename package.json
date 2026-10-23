@@ -9,6 +9,7 @@
     "dev:api": "node --watch-path=apps/api/src apps/api/src/index.js",
     "start": "next start",
     "build": "npm run db:generate && next build --webpack",
+    "vercel-build": "node scripts/vercel-build.mjs",
     "db:local:start": "node scripts/start-local-postgres.mjs",
     "db:generate": "prisma generate --schema apps/api/prisma/schema.prisma",
     "db:migrate": "prisma migrate deploy --schema apps/api/prisma/schema.prisma",

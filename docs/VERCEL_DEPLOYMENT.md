@@ -9,7 +9,7 @@ Import `NAVATHVIDYADHAR12/AEGISVAULT` and use these settings:
 - **Root Directory:** repository root (`./`)
 - **Framework Preset:** Next.js
 - **Install Command:** `npm ci`
-- **Build Command:** `npm run build`
+- **Build Command:** `npm run vercel-build`
 - **Output Directory:** leave the Next.js default
 - **Node.js:** 22.x (pinned by `package.json` to keep the Vercel build and Function runtime consistent)
 
@@ -34,14 +34,14 @@ Do not set `DEV_KEK_BASE64` in Vercel. The app permits same-origin CSRF requests
 
 ## Database migration
 
-Before signup is used, provision the PostgreSQL database and apply the committed schema using the same production database variables from a trusted terminal or CI job:
+Production Vercel builds run `prisma migrate deploy` before the Next.js build, using `DATABASE_URL_UNPOOLED`. Preview builds skip the migration because the production database variables are scoped to Production. Locally, apply the committed schema with:
 
 ```sh
 npm ci
 npm run db:migrate
 ```
 
-The Vercel build generates Prisma Client but does not run database migrations. This keeps deployments from applying schema changes unexpectedly. Confirm `/health` returns `{"status":"ok"}` after configuring the database.
+Prisma CLI reads `DATABASE_URL_UNPOOLED` from `prisma.config.ts` for schema operations and falls back to `DATABASE_URL` for local setups that provide only one connection URL. If no local URL is configured, Prisma uses a localhost placeholder so client generation and Preview builds do not require production credentials. Production builds require the real Neon `DATABASE_URL_UNPOOLED`; keep the pooled URL for application runtime traffic. `prisma migrate deploy` only applies pending committed migrations, so repeated production builds are safe.
 
 ## Important key handling
 
