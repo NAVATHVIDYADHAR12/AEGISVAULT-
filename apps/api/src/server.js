@@ -4,27 +4,11 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-import { createRequire } from 'node:module';
 import { z } from 'zod';
+import { asyncHandler } from './async-handler.js';
 import { prisma } from './db.js';
 import { authRouter, dashboardRouter, projectRouter, userRouter, accessRouter, secretRouter, auditRouter, policyRouter, incidentRouter } from './routes/index.js';
 import { isAllowedOrigin } from './middleware/auth.js';
-
-// Express 4 does not forward rejected promises from async route handlers.
-// Forward them to the error middleware so request failures do not crash the API.
-const require = createRequire(import.meta.url);
-const Layer = require('express/lib/router/layer');
-Layer.prototype.handle_request = function handleRequest(req, res, next) {
-  const handler = this.handle;
-  if (handler.length > 3) return next();
-  try {
-    const result = handler.call(this, req, res, next);
-    if (result && typeof result.then === 'function') result.catch(next);
-    return result;
-  } catch (error) {
-    return next(error);
-  }
-};
 
 function configurationError() {
   const auditKey = Buffer.from(process.env.AUDIT_HMAC_KEY || '', 'base64');
@@ -53,7 +37,7 @@ app.use((req, res, next) => cors({
 })(req, res, next));
 app.use(express.json({ limit: '128kb' }));
 app.use(cookieParser());
-app.get('/health', async (_req, res) => { await prisma.$queryRaw`SELECT 1`; res.json({ status: 'ok' }); });
+app.get('/health', asyncHandler(async (_req, res) => { await prisma.$queryRaw`SELECT 1`; res.json({ status: 'ok' }); }));
 const api = express.Router();
 api.use(rateLimit({ windowMs: 15 * 60_000, limit: 300, standardHeaders: true, legacyHeaders: false }));
 api.use((_req, res, next) => {

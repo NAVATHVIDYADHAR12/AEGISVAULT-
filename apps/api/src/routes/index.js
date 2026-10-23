@@ -1,11 +1,31 @@
-import { Router } from 'express';
+import { Router as createExpressRouter } from 'express';
 import crypto from 'node:crypto';
 import argon2 from 'argon2';
 import { z } from 'zod';
+import { asyncHandler } from '../async-handler.js';
 import { prisma } from '../db.js';
 import { appendAudit } from '../services/audit.js';
 import { requireAuth, requireRole, requireCsrf, hashToken, COOKIE, canAccessProject } from '../middleware/auth.js';
 import { encryptSecret, decryptSecret } from '../services/vault.js';
+
+// Wrap route callbacks explicitly. Patching Express's private Layer module
+// breaks in serverless bundles where that internal subpath is not packaged.
+function wrapRouteHandlers(handlers) {
+ return handlers.map(handler => {
+  if (Array.isArray(handler)) return wrapRouteHandlers(handler);
+  return typeof handler === 'function' && handler.length < 4 ? asyncHandler(handler) : handler;
+ });
+}
+
+function Router() {
+ const router = createExpressRouter();
+ for (const method of ['all','delete','get','head','options','patch','post','put']) {
+  const register = router[method].bind(router);
+  router[method] = (...args) => register(...args.slice(0, 1), ...wrapRouteHandlers(args.slice(1)));
+ }
+ return router;
+}
+
 export const authRouter=Router();
 authRouter.get('/csrf',(req,res)=>{const existing=req.cookies?.csv_csrf;const token=typeof existing==='string'&&/^[A-Za-z0-9_-]{43}$/.test(existing)?existing:crypto.randomBytes(32).toString('base64url');res.set('Cache-Control','no-store, private');res.cookie('csv_csrf',token,{httpOnly:false,sameSite:'strict',secure:process.env.NODE_ENV==='production',path:'/'});res.json({csrfToken:token})});authRouter.get('/setup-status',async(_req,res)=>res.json({setupRequired:(await prisma.organization.count())===0}));
 const credentials=z.object({email:z.string().email().max(254).transform(v=>v.toLowerCase()),password:z.string().min(12).max(128)});
